@@ -4,6 +4,40 @@ from selenium.webdriver.common.by import By
 
 from src.base.comments_crawler import CommentsCrawler
 
+
+def extract_article_id(url):
+    # 정규 표현식을 사용하여 특정 형식의 부분을 추출
+    match = re.search(r'/article/(\d+/\d+)', url)
+    if match:
+        return match.group(1)
+    else:
+        match = re.search(r'/article/comment/(\d+/\d+)', url)
+        if match:
+            return match.group(1)
+        else:
+            return None
+
+
+def change_comments_date_format(date_string):
+    try:
+        # 초 부분이 있는 형식으로 파싱 시도
+        date_obj = datetime.strptime(date_string, "%Y.%m.%d. %H:%M:%S")
+    except ValueError:
+        try:
+            # 초 부분이 없는 형식으로 파싱
+            date_obj = datetime.strptime(date_string, "%Y.%m.%d. %H:%M")
+            # 초 부분을 추가하여 원하는 형식으로 변환
+            formatted_date = date_obj.strftime("%Y-%m-%d_%H:%M:00")
+        except ValueError as e:
+            # 다른 형식의 예외 처리
+            raise ValueError(f"Incorrect date format: {e}")
+    else:
+        # 초 부분이 있는 형식으로 변환
+        formatted_date = date_obj.strftime("%Y-%m-%d_%H:%M:%S")
+
+    return formatted_date
+
+
 class NewsCommentsCrawler(CommentsCrawler):
 
     def _wait_more_btn(self):
