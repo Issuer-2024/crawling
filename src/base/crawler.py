@@ -1,4 +1,6 @@
 import logging
+
+import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
@@ -26,4 +28,10 @@ class Crawler:
         except Exception as e:
             logger.error(f"[FETCH ERROR] Page Load Failed: {e}")
 
-
+    def _close(self):
+        self.driver.quit()
+        node_url = os.getenv('WEB_DRIVER_HUB_URL') + '/session/' + self.driver.session_id  # 노드 URL 및 세션 ID 설정
+        response = requests.delete(node_url)
+        if response.status_code == 200:  # DELETE 요청 보내기
+            return True
+        return False
