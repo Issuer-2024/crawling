@@ -45,3 +45,9 @@ class FileManager(ABC):
                 for col in self.schema[main_type]:
                     row.append(data[col])
                 writer.writerow(row)
+
+    def load(self, path):
+        pass
+
+    def delete(self):
+        pass
