@@ -1,4 +1,7 @@
+import traceback
 from abc import ABC
+
+from bs4 import BeautifulSoup
 
 from src.base import IssueLoader
 from src.news.target_platform_list import target_news_platform_list
@@ -30,3 +33,25 @@ class NewsIssueLoader(IssueLoader, ABC):
                             .get_text(strip=True).replace(',', '')
                             .replace('조회수', ''))
         return news_view
+
+    def _parse(self, html):
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+            news_items = []
+
+            ranking_box = soup.select('div.press_ranking_home > div.press_ranking_box')
+
+            for sub_ranking in ranking_box:
+                items = self._get_news_items(sub_ranking)
+                for item in items:
+                    news_items.append({
+                        "순위": self._get_news_rank(item),
+                        "제목": self._get_news_title(item),
+                        "URL": self._get_news_link(item),
+                        "조회수": self._get_news_views(item),
+                    })
+
+            return news_items
+        except Exception as e:
+            traceback.print_exc()
+            return []
