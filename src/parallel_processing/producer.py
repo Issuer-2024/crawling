@@ -1,6 +1,17 @@
+import datetime
+import logging
+
 import pika
 import json
 import os
+
+from src.file_manager import FileManager
+from src.news.news_issue_loader import NewsIssueLoader
+
+logger = logging.getLogger(__name__)
+job_logger = logging.getLogger('job_logger')
+
+file_manger = FileManager()
 
 
 def send_task(task, queue):
@@ -18,3 +29,17 @@ def send_task(task, queue):
             delivery_mode=2,  # 메시지를 지속적으로 저장
         ))
     connection.close()
+
+
+def run_producer():
+    main_types = ['News']
+
+    for main_type in main_types:
+        job_logger.info(f"[Start {main_type} Crawling] Starting {main_type} Crawling on {datetime.datetime.now()}")
+
+        if main_type == 'News':
+            news_issue_loader = NewsIssueLoader()
+            issues = news_issue_loader.crawl_issues()
+            job_logger.info(issues)
+            for issue in issues:
+                send_task(issue, 'content_queue')
