@@ -1,13 +1,15 @@
-from abc import ABC
+from bs4 import BeautifulSoup
+from datetime import datetime
 
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from src.base import ContentCrawler
+import re
 import logging
 import traceback
-
 logger = logging.getLogger(__name__)
 
 
@@ -79,3 +81,26 @@ class NewsContentCrawler(ContentCrawler):
     def convert_comments_url(self, url):
         article_id = extract_article_id(url)
         return "https://n.news.naver.com/article/comment/" + article_id
+
+    def _parse(self, url):
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+        try:
+            return {
+                "문서 번호": extract_article_id(url),
+                "제목": self._get_news_title(soup),
+                "내용": self._get_news_article_body(soup),
+                "작성자": self._get_news_editor(soup),
+                "추천 수": self._get_news_recommendations_num(soup),
+                "비추천 수": None,
+                "댓글 수": self._get_news_comments_num(soup),
+                "작성 시간": self._get_news_created_at(soup),
+            }
+
+        except AttributeError as e:
+            logger.error(f'[Content Error] Error invoked {url}')
+            traceback.print_exc()  # 스택 트레이스를 출력
+            return None
+        except TimeoutException as e:
+            logger.error(f'[Content Error] Error invoked {url}')
+            traceback.print_exc()
+            return None
