@@ -2,7 +2,8 @@ import os
 from datetime import datetime
 import csv
 
-class FileManager(ABC):
+
+class FileManager:
 
     def __init__(self):
         self.schema = {
@@ -20,7 +21,9 @@ class FileManager(ABC):
         if not os.path.exists(f'{base_dir}/{current_datetime}/{main_type}'):
             os.makedirs(f'{base_dir}/{current_datetime}/{main_type}')
         base_dir = f'{base_dir}/{current_datetime}/{main_type}'
-        filename = f'{base_dir}/{sub_type}_ISSUE.csv' if main_type != 'ISSUE_COMMENTS' else f'{base_dir}/{sub_type}/' + data[0]['문서 번호'] + '_COMMENTS.csv'
+        filename = f'{base_dir}/{sub_type}_ISSUE.csv' if main_type != 'ISSUE_COMMENTS' else f'{base_dir}/{sub_type}/' + \
+                                                                                            data[0][
+                                                                                                '문서 번호'] + '_COMMENTS.csv'
 
         file_exists = os.path.exists(filename)
 
