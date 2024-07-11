@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
 from dotenv import load_dotenv
+import time
 
 logger = logging.getLogger(__name__)
 load_dotenv()
@@ -24,3 +25,5 @@ class Crawler:
             time.sleep(2)
         except Exception as e:
             logger.error(f"[FETCH ERROR] Page Load Failed: {e}")
+
+
