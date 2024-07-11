@@ -80,3 +80,27 @@ def callback(ch, method, properties, body, executor, task_type):
     elif task_type == 'comments':
         executor.submit(process_comments_task, body)
     ch.basic_ack(delivery_tag=method.delivery_tag)
+
+
+def run_worker(max_workers):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_URL'), 5672))
+    channel = connection.channel()
+
+    channel.queue_declare(queue='content_queue', durable=True)
+    channel.queue_declare(queue='comments_queue', durable=True)
+    channel.queue_declare(queue='completed_tasks_queue', durable=True)
+    channel.queue_declare(queue='failed_tasks_queue', durable=True)
+
+    executor = ThreadPoolExecutor(max_workers=max_workers)  # 스레드 풀 생성, 최대 5개의 스레드
+
+    # 큐에서 메시지 소비를 설정
+    channel.basic_qos(prefetch_count=1)
+    channel.basic_consume(queue='content_queue',
+                          on_message_callback=lambda ch, method, properties, body: callback(ch, method, properties,
+                                                                                            body, executor, 'content'))
+    channel.basic_consume(queue='comments_queue',
+                          on_message_callback=lambda ch, method, properties, body: callback(ch, method, properties,
+                                                                                            body, executor, 'comments'))
+
+    logger.info(' [*] Waiting for messages. To exit press CTRL+C')
+    channel.start_consuming()
