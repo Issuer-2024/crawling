@@ -8,3 +8,7 @@ class IssueLoader(Crawler, ABC):
         super().__init__()
         self.target_platforms = {}
         self.main_platform = 'unknown'
+
+    @abstractmethod
+    def _parse(self, html):
+        pass
