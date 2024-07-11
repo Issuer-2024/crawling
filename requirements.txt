@@ -1,0 +1,4 @@
+selenium==4.22.0
+webdriver_manager==4.0.1
+
+python-dotenv~=1.0.1
