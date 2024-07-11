@@ -1,9 +1,13 @@
+import os
+
+import pika
 import json
 
 from src.file_manager import FileManager
+from concurrent.futures import ThreadPoolExecutor
 import logging
 
-from src.news import NewsContentCrawler
+from src.news import NewsContentCrawler, NewsCommentsCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +15,22 @@ file_manager = FileManager()
 
 job_logger = logging.getLogger('job_logger')
 
+
+def send_task(task, queue):
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_URL'), 5672))
+    channel = connection.channel()
+
+    channel.queue_declare(queue=queue, durable=True)
+
+    message = json.dumps(task)
+    channel.basic_publish(
+        exchange='',
+        routing_key=queue,
+        body=message.encode('utf-8'),
+        properties=pika.BasicProperties(
+            delivery_mode=2,
+        ))
+    connection.close()
 
 def process_content_task(body):
     task = json.loads(body.decode('utf-8'))
