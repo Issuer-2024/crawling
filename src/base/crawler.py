@@ -17,3 +17,10 @@ class Crawler:
         chrome_options.add_argument("--disable-dev-shm-usage")
 
         self.driver = webdriver.Remote(command_executor=os.getenv('WEB_DRIVER_HUB_URL'), options=chrome_options)
+
+    def _fetch_page(self, url):
+        try:
+            self.driver.get(url)
+            time.sleep(2)
+        except Exception as e:
+            logger.error(f"[FETCH ERROR] Page Load Failed: {e}")
