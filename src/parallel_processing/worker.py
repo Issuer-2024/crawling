@@ -32,6 +32,7 @@ def send_task(task, queue):
         ))
     connection.close()
 
+
 def process_content_task(body):
     task = json.loads(body.decode('utf-8'))
     logger.info(task)
@@ -54,6 +55,7 @@ def process_content_task(body):
             send_task(retry_task, 'failed_tasks_queue')  # 일정 횟수 이상 실패한 작업은 별도 큐에 저장
             job_logger.info(f"[!!Crawling Failed!!] task: {task}")
 
+
 def process_comments_task(body):
     task = json.loads(body.decode('utf-8'))
     try:
@@ -70,3 +72,11 @@ def process_comments_task(body):
         else:
             send_task(retry_task, 'failed_tasks_queue')
         job_logger.info(f"[!!Crawling Failed!!] task: {task}")
+
+
+def callback(ch, method, properties, body, executor, task_type):
+    if task_type == 'content':
+        executor.submit(process_content_task, body)
+    elif task_type == 'comments':
+        executor.submit(process_comments_task, body)
+    ch.basic_ack(delivery_tag=method.delivery_tag)
