@@ -1,0 +1,45 @@
+version: '3'
+services:
+  selenium-grid-driver:
+    image: selenium/standalone-chrome:latest
+    platform: linux/amd64
+    container_name: selenium-grid-driver
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    shm_size: "2g"
+    environment:
+      - START_XVFB=false
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=10
+    networks:
+      - crawling-app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
+    networks:
+      - crawling-app-network
+
+  crawling-app:
+    image: jeongseho1/issuer-crawling-app:latest
+    container_name: crawling-app
+    depends_on:
+      - selenium-grid-driver
+      - rabbitmq
+    volumes:
+      - /issuer/crawling_data:/crawling_data
+    networks:
+      - crawling-app-network
+
+networks:
+  crawling-app-network:
+    driver: bridge
