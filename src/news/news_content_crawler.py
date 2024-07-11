@@ -1,3 +1,5 @@
+from abc import ABC
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +9,7 @@ import logging
 import traceback
 
 logger = logging.getLogger(__name__)
+
 
 def change_news_date_format(date_string):
     # "오전"/"오후"를 "AM"/"PM"으로 변환
@@ -18,6 +21,20 @@ def change_news_date_format(date_string):
     formatted_date = date_obj.strftime("%Y-%m-%d_%H:00:00")
 
     return formatted_date
+
+
+def extract_article_id(url):
+    # 정규 표현식을 사용하여 특정 형식의 부분을 추출
+    match = re.search(r'/article/(\d+/\d+)', url)
+    if match:
+        return match.group(1)
+    else:
+        match = re.search(r'/article/comment/(\d+/\d+)', url)
+        if match:
+            return match.group(1)
+        else:
+            return None
+
 
 class NewsContentCrawler(ContentCrawler):
 
@@ -58,3 +75,7 @@ class NewsContentCrawler(ContentCrawler):
             logger.error(f"[Content Warning] Could not find Comments Num")
             traceback.print_exc()
             return None
+
+    def convert_comments_url(self, url):
+        article_id = extract_article_id(url)
+        return "https://n.news.naver.com/article/comment/" + article_id
