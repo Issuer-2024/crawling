@@ -33,3 +33,20 @@ def process_content_task(body):
         else:
             send_task(retry_task, 'failed_tasks_queue')  # 일정 횟수 이상 실패한 작업은 별도 큐에 저장
             job_logger.info(f"[!!Crawling Failed!!] task: {task}")
+
+def process_comments_task(body):
+    task = json.loads(body.decode('utf-8'))
+    try:
+        news_comments_crawler = NewsCommentsCrawler()
+        data = news_comments_crawler.crawl_comments(task['comments_url'])
+        file_manager.save(data, 'ISSUE_COMMENTS', 'NEWS')
+        send_task({'status': 'completed', 'task': task}, 'completed_tasks_queue')
+        job_logger.info(f"[Crawling Success] task: {task}")
+    except Exception as e:
+        logger.error(f"Error Processing Task: {task}")
+        retry_task = {'comments_url': task['comments_url'], 'retry_count': task.get('retry_count', 0) + 1}
+        if retry_task['retry_count'] <= 2:
+            send_task(retry_task, 'comments_queue')
+        else:
+            send_task(retry_task, 'failed_tasks_queue')
+        job_logger.info(f"[!!Crawling Failed!!] task: {task}")
