@@ -36,7 +36,7 @@ services:
       - selenium-grid-driver
       - rabbitmq
     volumes:
-      - /issuer/crawling_data:/crawling_data
+      - /issuer/crawling_data:/issuer/crawling_data
     networks:
       - crawling-app-network
     environment:
@@ -44,7 +44,7 @@ services:
       - PRODUCER_NUM=1
       - WORKER_NUM=3
       - RABBITMQ_URL=rabbitmq
-      - DIR_CRAWLING_DATA=/crawling_data
+      - DIR_CRAWLING_DATA=/issuer/crawling_data
 
 networks:
   crawling-app-network:
