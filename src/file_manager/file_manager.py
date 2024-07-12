@@ -54,3 +54,6 @@ class FileManager:
 
     def delete(self):
         pass
+
+if __name__ == '__main__':
+    print(datetime.now().strftime("%Y-%m-%d_%H:00:00"))

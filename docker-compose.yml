@@ -39,6 +39,12 @@ services:
       - /issuer/crawling_data:/crawling_data
     networks:
       - crawling-app-network
+    environment:
+      - WEB_DRIVER_HUB_URL=${WEB_DRIVER_HUB_URL}
+      - PRODUCER_NUM=${PRODUCER_NUM}
+      - WORKER_NUM=${WORKER_NUM}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - DIR_CRAWLING_DATA=${DIR_CRAWLING_DATA}
 
 networks:
   crawling-app-network:
