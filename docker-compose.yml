@@ -40,11 +40,11 @@ services:
     networks:
       - crawling-app-network
     environment:
-      - WEB_DRIVER_HUB_URL=http://selenium-grid-driver:4444
+      - WEB_DRIVER_HUB_URL="http://selenium-grid-driver:4444"
       - PRODUCER_NUM=1
       - WORKER_NUM=3
-      - RABBITMQ_URL=rabbitmq
-      - DIR_CRAWLING_DATA=/issuer/crawling_data
+      - RABBITMQ_URL="rabbitmq"
+      - DIR_CRAWLING_DATA="/issuer/crawling_data"
 
 networks:
   crawling-app-network:
