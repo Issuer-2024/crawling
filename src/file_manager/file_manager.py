@@ -1,6 +1,10 @@
 import os
 from datetime import datetime
 import csv
+import logging
+
+logger = logging.getLogger(__name__)
+job_logger = logging.getLogger('job_logger')
 
 
 class FileManager:
@@ -13,6 +17,7 @@ class FileManager:
             'ISSUE_COMMENTS': ['문서 번호', '작성자', '내용', '추천 수', '비추천 수', '대댓글 수', '작성 시간']}
 
     def save(self, data, main_type, sub_type):
+        logger.info(f"[COLLECTED DATA] {data}")
         if not data:
             return
 

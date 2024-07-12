@@ -75,7 +75,6 @@ class NewsContentCrawler(ContentCrawler):
             return int(soup.select_one('span.u_cbox_count').get_text(strip=True).replace(',', ''))
         except Exception as e:
             logger.error(f"[Content Warning] Could not find Comments Num")
-            traceback.print_exc()
             return None
 
     def convert_comments_url(self, url):
