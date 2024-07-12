@@ -66,6 +66,7 @@ jobs:
           script: |
             whoami
             docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+            docker-compose down --rmi all
             docker-compose pull
             docker-compose up -d
             docker system prune -f
