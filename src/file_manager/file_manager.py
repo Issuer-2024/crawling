@@ -6,6 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 job_logger = logging.getLogger('job_logger')
 import traceback
+import pytz
 
 class FileManager:
 
@@ -21,12 +22,13 @@ class FileManager:
             return
 
         try:
-            current_datetime = datetime.now().strftime("%Y-%m-%d_%H-00-00")
+            kst_now = datetime.now().astimezone(pytz.timezone('Asia/Seoul'))
+            current_datetime = kst_now.strftime("%Y-%m-%d_%H-00-00")
             base_dir = os.getenv('DIR_CRAWLING_DATA')
             if not os.path.exists(f'{base_dir}/{current_datetime}/{main_type}'):
                 os.makedirs(f'{base_dir}/{current_datetime}/{main_type}')
             base_dir = f'{base_dir}/{current_datetime}/{main_type}'
-            filename = f'{base_dir}/{sub_type}_ISSUE.csv' if main_type != 'ISSUE_COMMENTS' else f'{base_dir}/{sub_type}/' + \
+            filename = f'{base_dir}/{sub_type}_ISSUE.csv' if main_type != 'ISSUE_COMMENTS' else f'{base_dir}/{sub_type}_COMMENTS/' + \
                                                                                                 data[0][
                                                                                                     '문서 번호'] + '_COMMENTS.csv'
 
