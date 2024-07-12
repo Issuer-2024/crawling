@@ -45,7 +45,7 @@ def process_content_task(body):
         send_task({'comments_url': comments_url}, 'comments_queue')
         job_logger.info(f"[Crawling Success] task: {task}")
     except Exception as e:
-        logger.error(f"[Error Processing Task]: {task}")
+        job_logger.error(f"[Error Processing Task]: {task}")
         # 실패한 작업을 다시 큐에 보내기
         retry_task = {'URL': task['URL'], 'retry_count': task.get('retry_count', 0) + 1}
         if retry_task['retry_count'] <= 2:  # 재시도 횟수 제한 설정
@@ -64,7 +64,7 @@ def process_comments_task(body):
         send_task({'status': 'completed', 'task': task}, 'completed_tasks_queue')
         job_logger.info(f"[Crawling Success] task: {task}")
     except Exception as e:
-        logger.error(f"Error Processing Task: {task}")
+        job_logger.error(f"Error Processing Task: {task}")
         retry_task = {'comments_url': task['comments_url'], 'retry_count': task.get('retry_count', 0) + 1}
         if retry_task['retry_count'] <= 2:
             send_task(retry_task, 'comments_queue')
