@@ -16,7 +16,7 @@ class FileManager:
         if not data:
             return
 
-        current_datetime = datetime.now().strftime("%Y-%m-%d_%H:00:00")
+        current_datetime = datetime.now().strftime("%Y-%m-%d_%H-00-00")
         base_dir = os.getenv('DIR_CRAWLING_DATA')
         if not os.path.exists(f'{base_dir}/{current_datetime}/{main_type}'):
             os.makedirs(f'{base_dir}/{current_datetime}/{main_type}')
