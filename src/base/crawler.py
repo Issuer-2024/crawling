@@ -28,7 +28,7 @@ class Crawler:
                     options=chrome_options
                 )
                 logger.info("Connected to the remote WebDriver.")
-            except WebDriverException as e:
+            except Exception as e:
                 logger.info(f"Connection failed: {e}. Retrying in 5 seconds...")
                 time.sleep(5)
 

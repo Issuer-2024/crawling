@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def setup_logging():
-    logging.basicConfig(level=logging.ERROR,
+    logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', )
     # 현재 시간 가져오기
     now = datetime.now()
