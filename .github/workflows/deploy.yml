@@ -49,21 +49,14 @@ jobs:
     needs: build-docker-image
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Set environment variables
-        run: |
-          echo "WEB_DRIVER_HUB_URL=${{ secrets.WEB_DRIVER_HUB_URL }}" >> $GITHUB_ENV
-          echo "PRODUCER_NUM=${{ secrets.PRODUCER_NUM }}" >> $GITHUB_ENV
-          echo "WORKER_NUM=${{ secrets.WORKER_NUM }}" >> $GITHUB_ENV
-          echo "RABBITMQ_URL=${{ secrets.RABBITMQ_URL }}" >> $GITHUB_ENV
-          echo "DIR_CRAWLING_DATA=${{ secrets.DIR_CRAWLING_DATA }}" >> $GITHUB_ENV
-          echo "SSH_HOST_NAME=${{ secrets.SSH_HOST_NAME }}" >> $GITHUB_ENV
-          echo "SSH_HOST_IP=${{ secrets.SSH_HOST_IP }}" >> $GITHUB_ENV
-          echo "SSH_PASSWORD=${{ secrets.SSH_PASSWORD }}" >> $GITHUB_ENV
-          echo "SSH_KEY=${{ secrets.SSH_KEY }}" >> $GITHUB_ENV
-          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> $GITHUB_ENV
-          echo "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> $GITHUB_ENV
+    env:
+      WEB_DRIVER_HUB_URL: ${{ secrets.WEB_DRIVER_HUB_URL }}
+      PRODUCER_NUM: ${{ secrets.PRODUCER_NUM }}
+      WORKER_NUM: ${{ secrets.WORKER_NUM }}
+      RABBITMQ_URL: ${{ secrets.RABBITMQ_URL }}
+      DIR_CRAWLING_DATA: ${{ secrets.DIR_CRAWLING_DATA }}
 
+    steps:
       - name: SSH into Ubuntu server and pull the latest image
         uses: appleboy/ssh-action@v1.0.3
         with:
