@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.support.wait import WebDriverWait
@@ -6,8 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 from src.base.comments_crawler import CommentsCrawler
-
-
+import logging
+logger = logging.getLogger(__name__)
 def extract_article_id(url):
     # 정규 표현식을 사용하여 특정 형식의 부분을 추출
     match = re.search(r'/article/(\d+/\d+)', url)

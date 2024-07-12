@@ -2,6 +2,7 @@ import logging
 
 import requests
 from selenium import webdriver
+from selenium.common import WebDriverException
 from selenium.webdriver.chrome.options import Options
 import os
 from dotenv import load_dotenv
@@ -19,7 +20,17 @@ class Crawler:
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
 
-        self.driver = webdriver.Remote(command_executor=os.getenv('WEB_DRIVER_HUB_URL'), options=chrome_options)
+        self.driver = None
+        while self.driver is None:
+            try:
+                self.driver = webdriver.Remote(
+                    command_executor=os.getenv('WEB_DRIVER_HUB_URL'),
+                    options=chrome_options
+                )
+                logger.info("Connected to the remote WebDriver.")
+            except WebDriverException as e:
+                logger.info(f"Connection failed: {e}. Retrying in 5 seconds...")
+                time.sleep(5)
 
     def _fetch_page(self, url):
         try:
