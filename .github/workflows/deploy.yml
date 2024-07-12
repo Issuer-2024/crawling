@@ -68,7 +68,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST_IP }}
           username: ${{ secrets.SSH_HOST_NAME }}
-          key: ${{ secrets.SSH_PASSWORD }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
             docker-compose pull
