@@ -7,7 +7,6 @@ from selenium.webdriver.chrome.options import Options
 import os
 from dotenv import load_dotenv
 import time
-
 logger = logging.getLogger(__name__)
 load_dotenv()
 

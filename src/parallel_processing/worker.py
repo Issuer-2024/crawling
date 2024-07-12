@@ -31,7 +31,7 @@ def send_task(task, queue):
 
 def process_content_task(body):
     task = json.loads(body.decode('utf-8'))
-    logger.info(task)
+    logger.error(task)
     try:
         # 메시지를 UTF-8로 디코딩하여 JSON으로 로드
         news_content_crawler = NewsContentCrawler()
