@@ -36,6 +36,7 @@ def process_content_task(body):
         # 메시지를 UTF-8로 디코딩하여 JSON으로 로드
         news_content_crawler = NewsContentCrawler()
         data = news_content_crawler.crawl_content(task['URL'])
+        logger.error(data)
         file_manager = FileManager()
         file_manager.save(task | data, 'ISSUE', 'NEWS')
         comments_url = news_content_crawler.convert_comments_url(task['URL'])
