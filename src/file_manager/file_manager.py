@@ -19,8 +19,6 @@ class FileManager:
     def save(self, data, main_type, sub_type):
         (logger.info
          (f"[COLLECTED DATA] {data}"))
-        if not data:
-            return
 
         try:
             current_datetime = datetime.now().strftime("%Y-%m-%d_%H-00-00")
