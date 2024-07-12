@@ -64,12 +64,13 @@ jobs:
           echo "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> $GITHUB_ENV
 
       - name: SSH into Ubuntu server and pull the latest image
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST_IP }}
           username: ${{ secrets.SSH_HOST_NAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
+            whoami
             docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
             docker-compose pull
             docker-compose up -d
