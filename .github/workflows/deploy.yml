@@ -64,7 +64,7 @@ jobs:
           echo "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> $GITHUB_ENV
 
       - name: SSH into Ubuntu server and pull the latest image
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST_IP }}
           username: ${{ secrets.SSH_HOST_NAME }}
